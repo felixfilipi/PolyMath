@@ -1,0 +1,113 @@
+1. Connect view with routing:
+
+[-] In views.py give the index function and let it return response text
+[-] Later on register create urls.py in the apps folder so we don't need to use the outer / project urls.
+[-] Check the urls.py file to know how to do it
+[-] This url connections known as routing, so we connect each file using urls.py
+
+2. How to connect the models with database:
+
+[-] Check the docs.djangoproject.com model/fields to know the var type and etc.
+[-] Create model / table in models.py, (check the models.py). The class name is the table name, meanwhile
+    the value inside it is the fields.
+[-] Migrate the database. Migrate means it tell the database to execute the model command. Just
+    type in terminal `python manage.py makemigrations`. It will return `No changes detected`, because we
+    need to add our app name in settings.py.
+[-] Open settings.py and add the appname in `INSTALLED_APPS`
+[-] Run `python manage.py makemigrations` It will migrate and create the database.
+[-] Register our model in `admin.py` check the file.
+[-] Check the /admin route, if we want to return the table's field in its proper title name and desc, use
+    __str__ to print the article title in admin page.
+
+3. Serialization:
+
+[-] Before sending the backend data / models to frontend, we need to do serialization.
+[-] The return result from this backend data will be packed as JSON or XML, etc
+
+[!] How to do this serialization?
+
+[-] install `pip install djangorestframework`
+[-] add the rest_framework in settings.py/INSTALLED_APPS.
+
+[-] Native way:
+[-] After create the models, we need to create serializer class, check the `serializers.py` file
+[-] after the serializers done, let's open the terminal shell command by typing
+    `python manage.py shell`
+[-] Inside this shell prompt run the command to serialize data
+[-] Type some serializer command
+
+[-] Using ModelSerializer:
+[-] ModelSerializer is same with regular serializer, but it will automatically generate a set of fields 
+    for you, based on model. 
+[-] Model serializer will automatically generate validators for the serializer.
+[-] It includes default implementations of .create() and .update()
+
+[-] The implementations can be seen in serializers.py
+
+4. Function based web api (REST / GET-POST view to model):
+
+[-] add view.py to return the serialization result 
+[-] After get and post method declared, we can try to get and post it at postman.
+[-] get in postman simply type localhost:8000/[your-endpoint] it will return the get from json response
+[-] but when it goes for POST, it will give forbidden result, because according to the docs,
+    to POST to view from client that won't have a CSRF token, this can be handle by adding @csrf_exempt
+    at our function to able post our value to the backend.
+
+[-] Follow the `views.py` code, it's simply easy to do get, post, put, delete.
+
+5. Web API decorator (special wrapper, like @csrf_exempt, but for other decorator):
+
+[-] return Response(data) # this render to content type as requested by client
+[-] status code = isntead of `return status=400`, it would be better to return better status code, which already
+    provided by REST framework, `HTTP_400_BAD_REQUEST` (not so necesarrily, just to make code easier to read)
+[-] Wrapping API view = this wrapper provide a few bits of functionality such as:
+
+    [-] make sure receive `Request` instance in view.
+    [-] add context to `Response` object so that content negotiation can be performed.
+    [-] Provide behaviour to return `405 method not allowed` responses.
+    [-] Handling `ParseError` exceptions that occur when accessing `request.data` with malformed input.
+
+[-] this API wrapper have 2 types:
+    [1] the `@api_view` which is decorator for function based view.
+    [2] the `APIView` for class based view
+
+[-] Both of the example of this wrapper (function based and class based) appear on views.py
+
+[-] Wrapping API using Mixins (fuck this, better leave it, go with viewset model, fucking 2 line only):
+
+[-] One of the big wins using class-based views is that it allows us to easily compose reusable bits of behaviour
+[-] This is work same with class based just easier (idk why but there's an error, so I just continue for it)
+
+The example can be seen in views.py (IMHO better use class based, coz easy to understand and more clear)
+
+6. ViewSets & Routers
+
+[-] ViewSets allows the developer to concentrate on modelling the state and interactions of the API, and leave the URL
+    construction to be handled automatically based on common conventions.
+
+7. What's the fucking different between class based that has been declared and the generic ones?
+
+[-] it's fucking same thing, but generic ones give less boilerplate code.
+
+8. What's the difference between this generic with viewset then? 
+
+[-] when you need to customize logic between list/create and retrieve/update/delete operation you 
+    can use generics, if not (if you need something simple) use viewset.
+
+9. Connect frontend and backend?
+
+[-] Frontend and backend literally two different server, the frontend get the data by
+    curl or doing get and post to a web server. this get and post method later on 
+    will fetch the data to the frontend (we simply use FETCH or AJAX to do this)
+    But for now its better to use FETCH since it's easier and the trend is using FETCH.
+
+10. What's useful lib for React native?
+
+[-] react-native-paper = give component (work like material ui)
+[-] tlwrn = tailwind for react native.
+
+11. If client work just by POST and GET the server, so how to protect it?
+
+[-] We need to use Auth0 concept that protect the API and this API can be build
+    using the help of 'jwt auth' libary. This is the most important things to learned
+    in backend
